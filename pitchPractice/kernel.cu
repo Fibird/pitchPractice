@@ -21,16 +21,16 @@ __global__ void kernel(int* a, size_t pitch)
 
 int main()
 {
-	//int **a;
+	int **a;
 	int *dev_a;
 	size_t pitch;
 	dim3 threads(W, H);
 	// allocate memory for array a
-	// a = (int**)malloc(H * sizeof(int*));
-	int a[H][W];
+	a = (int**)malloc(H * sizeof(int*));
+	
 	for (int i = 0; i < H; i++)
 	{
-		//a[i] = (int*)malloc(W * sizeof(int));
+		a[i] = (int*)malloc(W * sizeof(int));
 	}
 	// initialize array a
 	for (int i = 0; i < H; i++)
