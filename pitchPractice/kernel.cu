@@ -1,4 +1,3 @@
-
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 #include "device_functions.h"
@@ -7,7 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define W 25
+#define W 14
 #define H 25
 
 __global__ void kernel(int* a, size_t pitch)
@@ -26,11 +25,11 @@ int main()
 	size_t pitch;
 	dim3 threads(W, H);
 	// allocate memory for array a
-	a = (int**)malloc(H * sizeof(int*));
+	a = new int*[H];
 	
 	for (int i = 0; i < H; i++)
 	{
-		a[i] = (int*)malloc(W * sizeof(int));
+		a[i] = new int[W];
 	}
 	// initialize array a
 	for (int i = 0; i < H; i++)
