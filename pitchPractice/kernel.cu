@@ -20,44 +20,50 @@ __global__ void kernel(int* a, size_t pitch)
 
 int main()
 {
-	int *a;
+	int **a;
 	int *dev_a;
 	size_t pitch;
 	dim3 threads(W, H);
+	
+	// allocate a big array
+	int *bigA = new int[H * W];
 	// allocate memory for array a
-	//a = new int*[H];
-	a = (int*)malloc(W * H * sizeof(int));
+	a = new int*[H];
+	//a = (int*)malloc(W * H * sizeof(int));
 	
 	for (int i = 0; i < H; i++)
 	{
-		//a[i] = new int[W];
+		a[i] = &bigA[i * W];
 	}
 	// initialize array a
 	for (int i = 0; i < H; i++)
 	{
 		for (int j = 0; j < W; j++)
 		{
-			a[i * W + j] = 1;
+			//a[i * W + j] = 1;
+			a[i][j] = 1;
 		}
 	}
 	for (int i = 0; i < H; i++)
 	{
 		for (int j = 0; j < W; j++)
 		{
-			printf("%d ", a[i * W + j]);
+			//printf("%d ", a[i * W + j]);
+			printf("%d ", a[i][j]);
 		}
 		printf("\n");
 	}
 	cudaMallocPitch((void**)&dev_a, &pitch, W * sizeof(int), H);	
-	cudaMemcpy2D(dev_a, pitch, a, W * sizeof(int), W * sizeof(int), H, cudaMemcpyHostToDevice);
+	cudaMemcpy2D(dev_a, pitch, a[0], W * sizeof(int), W * sizeof(int), H, cudaMemcpyHostToDevice);
 	kernel<<<1, threads>>>(dev_a, pitch);
-	cudaMemcpy2D(a, W * sizeof(int), dev_a, pitch, W * sizeof(int), H, cudaMemcpyDeviceToHost);
+	cudaMemcpy2D(a[0], W * sizeof(int), dev_a, pitch, W * sizeof(int), H, cudaMemcpyDeviceToHost);
 
 	for (int i = 0; i < H; i++)
 	{
 		for (int j = 0; j < W; j++)
 		{
-			printf("%d ", a[i * W + j]);
+			//printf("%d ", a[i * W + j]);
+			printf("%d ", a[i][j]);
 		}
 		printf("\n");
 	}
