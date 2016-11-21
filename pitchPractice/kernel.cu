@@ -20,30 +20,31 @@ __global__ void kernel(int* a, size_t pitch)
 
 int main()
 {
-	int **a;
+	int *a;
 	int *dev_a;
 	size_t pitch;
 	dim3 threads(W, H);
 	// allocate memory for array a
-	a = new int*[H];
+	//a = new int*[H];
+	a = (int*)malloc(W * H * sizeof(int));
 	
 	for (int i = 0; i < H; i++)
 	{
-		a[i] = new int[W];
+		//a[i] = new int[W];
 	}
 	// initialize array a
 	for (int i = 0; i < H; i++)
 	{
 		for (int j = 0; j < W; j++)
 		{
-			a[i][j] = 1;
+			a[i * W + j] = 1;
 		}
 	}
 	for (int i = 0; i < H; i++)
 	{
 		for (int j = 0; j < W; j++)
 		{
-			printf("%d ", a[i][j]);
+			printf("%d ", a[i * W + j]);
 		}
 		printf("\n");
 	}
@@ -56,7 +57,7 @@ int main()
 	{
 		for (int j = 0; j < W; j++)
 		{
-			printf("%d ", a[i][j]);
+			printf("%d ", a[i * W + j]);
 		}
 		printf("\n");
 	}
